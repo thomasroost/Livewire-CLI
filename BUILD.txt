@@ -2,7 +2,7 @@ Simple build instructions:
 ------------------------------------------------------------------------
 
 Ensure you have PyInstaller installed
-Ensure you have 32-bit Python 2.7 installed
+Ensure you have 32-bit Python 3.12 installed
 
 Delete build/ & dist/
 
