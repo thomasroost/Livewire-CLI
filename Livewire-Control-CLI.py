@@ -6,7 +6,8 @@ __credits__ = ["Anthony Eden"]
 __license__ = "Proprietary"
 __version__ = "1.1.0"
 
-import os, sys
+import os
+import sys
 sys.path.append(os.path.dirname(os.path.realpath(__file__)) + "/libs")
 
 import time
@@ -90,7 +91,7 @@ if __name__ == "__main__":
     try:
         LivewireCLILogging.info("Attempting to connect to IP", args.lwcp_ip)
         device = LWCPClient(args.lwcp_ip)
-    except Exception, e:
+    except Exception as e:
         LivewireCLILogging.critical("Unable to connect", e.message)
         sys.exit(1)
 
@@ -101,14 +102,14 @@ if __name__ == "__main__":
     if args.get_showprofile:
         profile = device.getShowProfile()
         if profile is not None and len(profile) >= 1 and 'attributes' in profile[0] and 'profile_id' in profile[0]['attributes'] and 'profile_name' in profile[0]['attributes']:
-            print "ActiveShowProfile:" + str(profile[0]['attributes']['profile_id']) + "=" + str(profile[0]['attributes']['profile_name'])
+            print("ActiveShowProfile:" + str(profile[0]['attributes']['profile_id']) + "=" + str(profile[0]['attributes']['profile_name']))
 
     # Show Profiles - Get All
     if args.get_showprofiles:
         profiles = device.getShowProfiles()
         if profiles is not None and len(profiles) >= 1 and 'attributes' in profiles[0] and 'profile_list' in profiles[0]['attributes']:
             for profile in profiles[0]['attributes']['profile_list']:
-                print "ShowProfile:" + str(profile['id']) + "=" + str(profile['name'])
+                print("ShowProfile:" + str(profile['id']) + "=" + str(profile['name']))
 
     # Show Profile - Set
     if args.set_showprofile:
@@ -129,7 +130,7 @@ if __name__ == "__main__":
             source = device.getSourceProfile(chnum, chtype)
             if source is not None and len(source) >= 1 and 'attributes' in source[0]:
                 for attr in source[0]['attributes']:
-                    print "active_" + str(attr) + "=" +str(source[0]['attributes'][attr]) 
+                    print("active_" + str(attr) + "=" +str(source[0]['attributes'][attr])) 
 
         # Source Profiles - Get All
         if args.get_sourceprofiles:
@@ -140,7 +141,7 @@ if __name__ == "__main__":
                         lwch = "/Lw" + str(source['lwch'])
                     else:
                         lwch = ""
-                    print "SourceProfile:" + str(source['id']) + lwch + "=" + str(source['name'])
+                    print("SourceProfile:" + str(source['id']) + lwch + "=" + str(source['name']))
 
         # Source Profile - Set
         if args.set_sourceprofile:
@@ -151,9 +152,9 @@ if __name__ == "__main__":
             state = device.getChannelState(chnum, chtype)
             if state is not None and len(state) >= 1 and 'attributes' in state[0] and 'ChannelOn' in state[0]['attributes']:
                 if state[0]['attributes']['ChannelOn'] is True:
-                    print "ChannelOn"
+                    print("ChannelOn")
                 else:
-                    print "ChannelOff"
+                    print("ChannelOff")
 
         # Channel - State Set
         if args.set_channelstate and args.set_channelstate == "ON":
@@ -165,7 +166,7 @@ if __name__ == "__main__":
         if args.get_fadergain:
             gain = device.getChannelGain(chnum, chtype)
             if gain is not None and len(gain) >= 1 and 'attributes' in gain[0] and 'fader_gain' in gain[0]['attributes']:
-                print "FaderGain:" + str(gain[0]['attributes']['fader_gain'])
+                print("FaderGain:" + str(gain[0]['attributes']['fader_gain']))
 
         # Channel - Fader Level Set
         if args.set_fadergain is not None:
@@ -177,29 +178,29 @@ if __name__ == "__main__":
             if bus is not None and len(bus) >= 1:
                 for bus_info in bus:
                     if 'bus_pgm1' in bus_info['attributes'] and (args.get_channelbus == "PGM1" or args.get_channelbus == "ALL") and bus_info['attributes']['bus_pgm1'] is True:
-                        print "PGM1:ON"
+                        print("PGM1:ON")
                     elif 'bus_pgm1' in bus_info['attributes'] and (args.get_channelbus == "PGM1" or args.get_channelbus == "ALL") and bus_info['attributes']['bus_pgm1'] is False:
-                        print "PGM1:OFF"
+                        print("PGM1:OFF")
                     
                     if 'bus_pgm2' in bus_info['attributes'] and (args.get_channelbus == "PGM2" or args.get_channelbus == "ALL") and bus_info['attributes']['bus_pgm2'] is True:
-                        print "PGM2:ON"
+                        print("PGM2:ON")
                     elif 'bus_pgm2' in bus_info['attributes'] and (args.get_channelbus == "PGM2" or args.get_channelbus == "ALL") and bus_info['attributes']['bus_pgm2'] is False:
-                        print "PGM2:OFF"
+                        print("PGM2:OFF")
                     
                     if 'bus_pgm3' in bus_info['attributes'] and (args.get_channelbus == "PGM3" or args.get_channelbus == "ALL") and bus_info['attributes']['bus_pgm3'] is True:
-                        print "PGM3:ON"
+                        print("PGM3:ON")
                     elif 'bus_pgm3' in bus_info['attributes'] and (args.get_channelbus == "PGM3" or args.get_channelbus == "ALL") and bus_info['attributes']['bus_pgm3'] is False:
-                        print "PGM3:OFF"
+                        print("PGM3:OFF")
                     
                     if 'bus_pgm4' in bus_info['attributes'] and (args.get_channelbus == "PGM4" or args.get_channelbus == "ALL") and bus_info['attributes']['bus_pgm4'] is True:
-                        print "PGM4:ON"
+                        print("PGM4:ON")
                     elif 'bus_pgm4' in bus_info['attributes'] and (args.get_channelbus == "PGM4" or args.get_channelbus == "ALL") and bus_info['attributes']['bus_pgm4'] is False:
-                        print "PGM4:OFF"
+                        print("PGM4:OFF")
                     
                     if 'bus_prev' in bus_info['attributes'] and (args.get_channelbus == "PREV" or args.get_channelbus == "ALL") and bus_info['attributes']['bus_prev'] is True:
-                        print "PREV:ON"
+                        print("PREV:ON")
                     elif 'bus_prev' in bus_info['attributes'] and (args.get_channelbus == "PREV" or args.get_channelbus == "ALL") and bus_info['attributes']['bus_prev'] is False:
-                        print "PREV:OFF"
+                        print("PREV:OFF")
 
         # Channel - Bus Set PGM1
         if args.set_channelbus_pgm1 and args.set_channelbus_pgm1 == "ON":
@@ -238,9 +239,9 @@ if __name__ == "__main__":
         if args.get_vmixstate:
             vmix = device.getVMixChannelState(args.vmix_num, args.vmix_chnum)
             if vmix is not None and len(vmix) >= 1 and 'attributes' in vmix[0] and 'VMixOn' in vmix[0]['attributes'] and vmix[0]['attributes']['VMixOn'] is True:
-                print "VMix:ON"
+                print("VMix:ON")
             elif vmix is not None and len(vmix) >= 1 and 'attributes' in vmix[0] and 'VMixOn' in vmix[0]['attributes'] and vmix[0]['attributes']['VMixOn'] is False:
-                print "VMix:OFF"
+                print("VMix:OFF")
 
         # VMix - On/Off State Set
         if args.set_vmixstate and args.set_vmixstate == "ON":
@@ -252,7 +253,7 @@ if __name__ == "__main__":
         if args.get_vmixgain:
             vmix = device.getVMixChannelState(args.vmix_num, args.vmix_chnum)
             if vmix is not None and len(vmix) >= 1 and 'attributes' in vmix[0] and 'vmix_gain' in vmix[0]['attributes']:
-                print "VMixGain:" + str(vmix[0]['attributes']['vmix_gain'])
+                print("VMixGain:" + str(vmix[0]['attributes']['vmix_gain']))
 
         # VMix - Gain Set
         if args.set_vmixgain is not None:
@@ -261,4 +262,4 @@ if __name__ == "__main__":
     # Disconnect from the LWCP
     time.sleep(0.4)
     device.stop()
-    sys.exit(0)
+    sys.exit()

@@ -6,7 +6,8 @@ __credits__ = ["Anthony Eden"]
 __license__ = "Proprietary"
 __version__ = "1.0.1"
 
-import os, sys
+import os
+import sys
 sys.path.append(os.path.dirname(os.path.realpath(__file__)) + "/libs")
 
 import time
@@ -28,7 +29,6 @@ if __name__ == "__main__":
     # Default connection parameters
     parser.add_argument("lwrp_ip", help="Enter the IP Address of your LWRP Device")
     parser.add_argument("-p", "--lwrp_password", metavar="PASSWORD", help="The Password for your LWRP Device")
-    #parser.add_argument("-f", "--format", choices=["TEXT", "JSON"], default="TEXT", help="Enter 'json' or 'text'")
     
     # Specify which port on the device we're going to be dealing with
     parser.add_argument("--sourcenum", type=int, help="Enter the input channel number for your physical device")
@@ -47,13 +47,10 @@ if __name__ == "__main__":
     parser.add_argument('--get_gpopinstate', default=False, action='store_true', help="Get the current state of one specified pin on the GPO port")
 
     # Options to set data
-    #parser.add_argument('--set_name', type=str, metavar="NAME", help="Change the name of the specified channel")
     parser.add_argument('--set_ch', type=str, metavar="XXX.XXX.XXX.XXX", help="Change the current channel number (raw) of a specified channel")
     parser.add_argument('--set_chlw', type=int, metavar="123", help="Change the Livewire Stream Number of the specified channel")
     parser.add_argument('--set_chlwtype', type=str, default="standard", choices=["standard", "livestream", "backfeed_standard", "backfeed_livestream", "surround"], help="Specify the Livewire Stream Type for the specified channel")
-    #parser.add_argument('--set_gpiportstate', type=str, metavar="XXXXX", help="Change the state of all pins on the GPIO port")
     parser.add_argument('--set_gpipinstate', type=str, choices=["HIGH", "LOW"], help="Change the state of one specified pin on the GPO port")
-    #parser.add_argument('--set_gpoportstate', type=str, metavar="XXXXX", help="Change the state of all pins on the GPIO port")
     parser.add_argument('--set_gpopinstate', type=str, choices=["HIGH", "LOW"], help="Change the state of one specified pin on the GPO port")
     parser.add_argument('--set_gpiomomentary', default=False, action='store_true', help="Specify this option to make this a momentary GPIO trigger")
 
@@ -85,7 +82,7 @@ if __name__ == "__main__":
     try:
         LivewireCLILogging.info("Attempting to connect to IP", args.lwrp_ip)
         device = LWRPClient(args.lwrp_ip, 93)
-    except Exception, e:
+    except Exception as e:
         LivewireCLILogging.critical("Unable to connect", e.message)
         sys.exit(1)
 
@@ -104,16 +101,16 @@ if __name__ == "__main__":
         for source in sources:
             if int(source['num']) == args.sourcenum:
                 if args.get_name:
-                    print source['attributes']['name']
+                    print(source['attributes']['name'])
                 
                 if args.get_ch:
-                    print source['attributes']['rtp_destination']
+                    print(source['attributes']['rtp_destination'])
                 
                 if args.get_chlw:
-                    print AxiaLivewireAddressHelper.multicastAddrToStreamNum(source['attributes']['rtp_destination'])
+                    print(AxiaLivewireAddressHelper.multicastAddrToStreamNum(source['attributes']['rtp_destination']))
                 
                 if args.get_chlwtype:
-                    print AxiaLivewireAddressHelper.streamFormatFromMulticastAddr(source['attributes']['rtp_destination'])
+                    print(AxiaLivewireAddressHelper.streamFormatFromMulticastAddr(source['attributes']['rtp_destination']))
 
     # Destination information
     if args.destinationnum and (args.get_name or args.get_ch or args.get_chlw or args.get_chlwtype):
@@ -121,16 +118,16 @@ if __name__ == "__main__":
         for destination in destinations:
             if int(destination['num']) == args.destinationnum:
                 if args.get_name:
-                    print destination['attributes']['name']
+                    print(destination['attributes']['name'])
                 
                 if args.get_ch:
-                    print destination['attributes']['address']
+                    print(destination['attributes']['address'])
                 
                 if args.get_chlw:
-                    print AxiaLivewireAddressHelper.multicastAddrToStreamNum(destination['attributes']['address'])
+                    print(AxiaLivewireAddressHelper.multicastAddrToStreamNum(destination['attributes']['address']))
                 
                 if args.get_chlwtype:
-                    print AxiaLivewireAddressHelper.streamFormatFromMulticastAddr(destination['attributes']['address'])
+                    print(AxiaLivewireAddressHelper.streamFormatFromMulticastAddr(destination['attributes']['address']))
 
     # Set source
     if args.sourcenum and args.set_ch:
@@ -166,10 +163,10 @@ if __name__ == "__main__":
                         pinStr += "H"
                     elif pin['state'] == "low":
                         pinStr += "L"
-                print pinStr
+                print(pinStr)
             elif int(port['num']) == args.gpio_port_num and args.get_gpipinstate:
                 # Output one string as 'HIGH' or 'LOW'
-                print port['pin_states'][args.gpio_pin_num]['state'].upper()
+                print(port['pin_states'][args.gpio_pin_num]['state'].upper())
     
     # Get GPO Port/Pin data
     if args.gpio_port_num and (args.get_gpoportstate or (args.gpio_pin_num and args.get_gpopinstate)):
@@ -183,10 +180,10 @@ if __name__ == "__main__":
                         pinStr += "H"
                     elif pin['state'] == "low":
                         pinStr += "L"
-                print pinStr
+                print(pinStr)
             elif int(port['num']) == args.gpio_port_num and args.get_gpopinstate:
                 # Output one string as 'HIGH' or 'LOW'
-                print port['pin_states'][args.gpio_pin_num]['state'].upper()
+                print(port['pin_states'][args.gpio_pin_num]['state'].upper())
 
     # Set GPI Pin Data
     if args.gpio_port_num and args.gpio_pin_num and args.set_gpipinstate:
@@ -202,7 +199,7 @@ if __name__ == "__main__":
         # Change the pin state
         device.setGPI(args.gpio_port_num, args.gpio_pin_num, args.set_gpipinstate.lower())
 
-        if args.set_gpipmomentary and returnState is not None:
+        if args.set_gpiomomentary and returnState is not None:
             time.sleep(1)
             device.setGPI(args.gpio_port_num, args.gpio_pin_num, returnState)
 
@@ -226,4 +223,4 @@ if __name__ == "__main__":
     # Disconnect from the LWRP
     time.sleep(0.4)
     device.stop()
-    sys.exit(0)
+    sys.exit()
